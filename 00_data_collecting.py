@@ -28,11 +28,12 @@ workout = pd.read_csv('./Data/apple_health_export/Workout.csv')
 activeEnergy = pd.read_csv('./Data/apple_health_export/ActiveEnergyBurned.csv')
 restEnergy = pd.read_csv('./Data/apple_health_export/BasalEnergyBurned.csv')
 weight = pd.read_csv('./Data/apple_health_export/BodyMass.csv')
-steps = pd.read_csv('./Data/apple_health_export/StepCount.csv')
 standing = pd.read_csv('./Data/apple_health_export/AppleStandTime.csv')
 heartRate = pd.read_csv('./Data/apple_health_export/HeartRate.csv')
 restingHeartRate = pd.read_csv(
     './Data/apple_health_export/RestingHeartRate.csv')
+steps = pd.read_csv('./Data/Exports/activity-export.csv', sep=';')
+steps.columns = steps.columns.str.split(' ').str[0]
 files = os.listdir('./Data')
 for fileName in files:
     if fileName.startswith('Nutrition'):
