@@ -53,6 +53,7 @@ def transform_weight(df):
     df['date'] = pd.to_datetime(df['startDate']).dt.date
     df['time'] = pd.to_datetime(df['startDate']).dt.time
     df = df.loc[df['sourceName']=='Health'].copy()
+    df.rename(columns={'value': 'bodyweight'}, inplace=True)
     df.drop(['startDate', 'endDate', 'sourceVersion', 'device', 'creationDate',
              'type'], axis = 1, inplace=True)
     date_today = datetime.now()
@@ -69,13 +70,9 @@ def transform_activity(standing_df, steps_df):
     standing_df = (standing_df[['value', 'hour','date']]
                    .groupby(['date', 'hour'], as_index=False)).sum()
     standing_df.rename(columns={'value': 'standing'}, inplace=True)
-    steps_df = steps_df.loc[steps_df['sourceName']==
-                            'Apple\xa0Watch von Kevin'].copy()
-    steps_df['date'] = pd.to_datetime(steps_df['startDate']).dt.date
-    steps_df['hour'] = pd.to_datetime(steps_df['startDate']).dt.hour
-    steps_df = (steps_df[['value', 'hour', 'date']]
-                .groupby(['date', 'hour'], as_index=False)).sum()
-    steps_df.rename(columns={'value': 'steps'}, inplace=True)
+    steps_df['hour'] = pd.to_datetime(steps_df['date']).dt.hour
+    steps_df['date'] = pd.to_datetime(steps_df['date']).dt.date
+    steps_df.drop(['duration', 'distance', 'calories'], axis=1, inplace=True)
     activity = standing_df.merge(steps_df, how='outer', on=['date', 'hour'])
     date_today = datetime.now()
     dates = pd.DataFrame(pd.date_range('2019-08-01 00:00:00', date_today,
@@ -138,21 +135,27 @@ energy = transform_BurnedEnergy(restEnergy, activeEnergy)
 workout = transform_workout(workout)
 weight = transform_weight(weight)
 activity = transform_activity(standing, steps)
-health = transform_health(heartRate, restingHeartRate)
+heartrate = transform_health(heartRate, restingHeartRate)
 nutrition = transform_nutrition(nutrition)
 
-# filter all datasets for date > 2019-07-31
+# filter all datasets for date > 2019-07-31 and drop last date
 def date_filter(df, date):
-    df = df.loc[df['date'] > pd.to_datetime(date)]
-datasets = [energy, workout, weight, activity, health, nutrition]  
+    last_day = df.iloc[-1:]['date'].values
+    df = df.loc[pd.to_datetime(df['date']) > pd.to_datetime(date)]
+    df = df.loc[pd.to_datetime(df['date']) < pd.to_datetime(last_day[0])]
+    return df
 date = '2019-07-31'
-for df in datasets:
-    date_filter(df, date)
+energy = date_filter(energy, date)
+workout = date_filter(workout, date)
+weight = date_filter(weight, date)
+activity = date_filter(activity, date)
+heartrate = date_filter(heartrate, date)
+nutrition = date_filter(nutrition, date)
 
 # handle missing values
 ## weight
 for col in weight.columns:
-    if col == 'value':
+    if col == 'bodyweight':
         weight[col].interpolate(method='linear', inplace=True)
         weight[col] = round(weight[col], 1)
     elif col == 'sourceName':
@@ -238,7 +241,7 @@ energy.to_sql('EnergyConsumption', conn, index=False, if_exists='replace')
 workout.to_sql('Workout', conn, index=False, if_exists='replace')
 weight.to_sql('Bodyweight', conn, index=False, if_exists='replace')
 activity.to_sql('Activity', conn, index=False, if_exists='replace')
-health.to_sql('Health', conn, index=False, if_exists='replace')
+heartrate.to_sql('HeartRate', conn, index=False, if_exists='replace')
 nutrition.to_sql('Nutrition', conn, index=False, if_exists='replace')
 print()
 print('Tables successfully stored in "./Data/Health.db"')
