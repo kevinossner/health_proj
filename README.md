@@ -54,7 +54,7 @@ The files have to be executed in the order of the numbering, starting with `00_d
 
 ## Results<a name="results"></a>
 
-The main findings of the code can be found at the post available [here](https://medium.com/@kevinossner/how-much-can-you-deadlift-96f84ca5f3ee?source=friends_link&sk=0c663e94f4865971f505aff0189ce56e).
+The main findings of the code can be found at the post available [here](https://medium.com/@kevinossner/whats-inside-my-health-data-44f7fdbf5715).
 
 ## Resources<a name="resources"></a>
 https://github.com/markwk/qs_ledger/tree/master/apple_health
