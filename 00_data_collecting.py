@@ -13,10 +13,11 @@ import sqlite3
 import glob
 import shutil
 
+# run apple health data parser
 cmd = 'python apple_health_data_parser.py Data/apple_health_export/Export.xml'
 os.system(cmd)
 
-#unzip files
+#unzip files from myfitnesspal export
 with zipfile.ZipFile('./Data/Exports/MFP_Export.zip', 'r') as zipObj:
     listOfFileNames = zipObj.namelist()
     for fileName in listOfFileNames:
