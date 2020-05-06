@@ -38,18 +38,19 @@ The code should run with no issues using Python versions 3.*.
 
 For this project, I was interestested in using my own data from Apple Health, MyFitnessPal and StepsApp to answer following questions:
 
-1. Where is powerlifting (outside USA) most popular?
-2. How much do the three lifts (squat, benchpress, deadlift) interfere each other?
-3. Can you predict the best deadlift attempt with the other two lifts and some additional data?
+1. How can I combine all my health data into one dataset?
+2. How does my health data developed over time?
+3. How is the correlation between the amount of burned calories and all other variables?
+4. Can you predict the amount of burned calories?
 
-Especially the last question could be useful in practice for powerlifting athletes, because at meets they have to pick the weight for every attempt carefully to not overshoot or to leave potential.
-
+Especially the last question could be useful in practice to give fitness geeks like me a guideline how much they can eat to reduce bodyweight or gain muscles.
 
 ## File Descriptions <a name="files"></a>
+There are three python scripts (`apple_health_data_parser`, `00_data_collecting`, `01_data_cleaning`) which do the preprocessing part of the project.
 
-There is one notebook available here to showcase work related to the above questions. The notebook contains parts of data preprocessing, exploratory analysis and predictive analytics. Markdown cells were used to assist in walking through the process and documenting the code.
+There are two notebooks (`02_data_analysis`, `03_machine_learning`) which visualize the data analysis and the results of the prediction. Markdown cells were used to assist in walking through the process and documenting the code.
 
-There is an additional `plots` folder that contains all created plots to obtain the final results of the project. Also the used data as a `.zip` file can be found.
+The files have to be executed in the order of the numbering, starting with `00_data_collecting` and ending with `03_machine_learning`. The `apple_health_data_parser` doesn't need to be excecuted specifically, because it will be executed through `00_data_collecting`.
 
 ## Results<a name="results"></a>
 
