@@ -52,6 +52,8 @@ There are two notebooks (`02_data_analysis`, `03_machine_learning`) which visual
 
 The files have to be executed in the order of the numbering, starting with `00_data_collecting` and ending with `03_machine_learning`. The `apple_health_data_parser` doesn't need to be excecuted specifically, because it will be executed through `00_data_collecting`.
 
+In the folder `./Data/Exports` there are three files which are the exports from Apple Health, MyFitnessPal and StepsApp. `00_data_collecting` will collect these exports and store the data in a sqlite database (`Health.db`) in the Data-folder.
+
 ## Results<a name="results"></a>
 
 The main findings of the code can be found at the post available [here](https://medium.com/@kevinossner/whats-inside-my-health-data-44f7fdbf5715).
