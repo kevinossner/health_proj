@@ -15,6 +15,16 @@ import sqlite3
 
 # process calories burned data
 def transform_BurnedEnergy(Rest_df, Active_df):
+    '''
+    INPUT
+    ----------
+    Rest_df : dataframe with resting burned calories from apple health.
+    Active_df : dataframe with active burned calories from apple health.
+
+    OUTPUT
+    -------
+    Combined and cleaned dataframe.
+    '''
     Rest_df['date'] = pd.to_datetime(Rest_df['startDate']).dt.date
     Rest_df['startTime'] = pd.to_datetime(Rest_df['startDate']).dt.time
     Rest_df['endTime'] = pd.to_datetime(Rest_df['endDate']).dt.time
@@ -34,6 +44,15 @@ def transform_BurnedEnergy(Rest_df, Active_df):
 
 # process workout data
 def transform_workout(df):
+    '''
+    INPUT
+    ----------
+    df : dataframe with recorded workouts from apple health.
+
+    OUTPUT
+    -------
+    Cleaned dataframe with missing values on days without a workout.
+    '''
     df['date'] = pd.to_datetime(df['startDate']).dt.date
     df['startTime'] = pd.to_datetime(df['startDate']).dt.time
     df['endTime'] = pd.to_datetime(df['endDate']).dt.time
@@ -50,6 +69,15 @@ def transform_workout(df):
 
 # process bodyweight data
 def transform_weight(df):
+    '''
+    INPUT
+    ----------
+    df : dataframe with bodyweight measurements from apple health.
+
+    OUTPUT
+    -------
+    Cleaned dataframe with missing values on days without a measurement.
+    '''
     df['date'] = pd.to_datetime(df['startDate']).dt.date
     df['time'] = pd.to_datetime(df['startDate']).dt.time
     df = df.loc[df['sourceName']=='Health'].copy()
@@ -65,6 +93,16 @@ def transform_weight(df):
     
 # process activity data
 def transform_activity(standing_df, steps_df):
+    '''
+    INPUT
+    ----------
+    standing_df : dataframe with standing minutes from apple health.
+    steps_df : dataframe with counted steps from StepsApp.
+
+    OUTPUT
+    -------
+    Cleaned and combined dataframe with missing values where nothing recorded.
+    '''
     standing_df['date'] = pd.to_datetime(standing_df['startDate']).dt.date
     standing_df['hour'] = pd.to_datetime(standing_df['startDate']).dt.hour
     standing_df = (standing_df[['value', 'hour','date']]
@@ -84,6 +122,17 @@ def transform_activity(standing_df, steps_df):
 
 # process health data
 def transform_health(hr_df, rest_hr_df):
+    '''
+    INPUT
+    ----------
+    hr_df : dataframe with current heart rate recorded from apple health.
+    rest_hr_df : dataframe with resting heart rate from apple health.
+
+    OUTPUTs
+    -------
+    Cleaned and combined dataframe.
+
+    '''
     hr_df['date'] = pd.to_datetime(hr_df['startDate']).dt.date
     hr_df['time'] = pd.to_datetime(hr_df['startDate']).dt.time
     hr_df.drop(['sourceVersion', 'device', 'type', 'creationDate', 'startDate',
@@ -98,6 +147,16 @@ def transform_health(hr_df, rest_hr_df):
 
 # process nutrition data
 def transform_nutrition(df):
+    '''
+    INPUT
+    ----------
+    df : dataframe with nutrition data from myfitnesspal.
+
+    OUTPUT
+    -------
+    Cleaned dataframe with missing values in every meal where nothing was
+    recorded.
+    '''
     df = df.filter(['Date', 'Meal', 'Time', 'Calories', 'Carbohydrates (g)',
                     'Fat (g)', 'Protein (g)'])
     df['Date'] = pd.to_datetime(df['Date'])
@@ -140,6 +199,16 @@ nutrition = transform_nutrition(nutrition)
 
 # filter all datasets for date > 2019-07-31 and drop last date
 def date_filter(df, date):
+    '''
+    INPUT
+    ----------
+    df : dataframe which wants to be filtered by time.
+    date : date after which the dataframe can contain observations.
+
+    OUTPUT
+    -------
+    df : filtered dataframe.
+    '''
     last_day = df.iloc[-1:]['date'].values
     df = df.loc[pd.to_datetime(df['date']) > pd.to_datetime(date)]
     df = df.loc[pd.to_datetime(df['date']) < pd.to_datetime(last_day[0])]
